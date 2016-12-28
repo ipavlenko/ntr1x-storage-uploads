@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.ntr1x.storage.core.model.Image;
 import com.ntr1x.storage.core.model.Resource;
 import com.ntr1x.storage.core.model.ResourceImage;
+import com.ntr1x.storage.core.reflection.ResourceUtils;
 import com.ntr1x.storage.core.services.IFileService;
 import com.ntr1x.storage.core.services.IScaleImageService;
 import com.ntr1x.storage.security.model.User;
@@ -53,7 +54,7 @@ public class ImageService implements IImageService {
         em.persist(image);
         em.flush();
         
-        security.register(image, "images/i");
+        security.register(image, ResourceUtils.alias(null, "images/i", image));
 		security.grant(user, image.getAlias(), "admin");
         
         try {

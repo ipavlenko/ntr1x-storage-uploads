@@ -16,13 +16,14 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.ntr1x.storage.core.model.Image;
 import com.ntr1x.storage.core.services.IFileService;
-import com.ntr1x.storage.core.transport.PageResponse;
 import com.ntr1x.storage.core.transport.PageableQuery;
 import com.ntr1x.storage.uploads.services.IImageService;
+import com.ntr1x.storage.uploads.services.IImageService.ImagePageResponse;
 
 import io.swagger.annotations.Api;
 
@@ -44,16 +45,21 @@ public class ImageResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed({ "res:///images:admin" })
 	@Transactional
-	public PageResponse<Image> list(
+	public ImagePageResponse list(
 	    @QueryParam("aspect") String aspect,
 		@BeanParam PageableQuery pageable
 	) {
 		
-		return new PageResponse<>(
-			images.query(
-				aspect,
-				pageable.toPageRequest()
-			)
+		Page<Image> p = images.query(
+			aspect,
+			pageable.toPageRequest()
+		);
+        
+        return new ImagePageResponse(
+    		p.getTotalElements(),
+    		p.getNumber(),
+    		p.getSize(),
+    		p.getContent()
 		);
 	}
 	

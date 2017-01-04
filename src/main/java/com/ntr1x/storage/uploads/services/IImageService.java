@@ -1,6 +1,7 @@
 package com.ntr1x.storage.uploads.services;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -30,6 +31,19 @@ public interface IImageService {
 	
     void createImages(Resource resource, RelatedImage[] images);
     void updateImages(Resource resource, RelatedImage[] images);
+    
+    @XmlRootElement
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ImagePageResponse {
+
+    	public long count;
+        public int page;
+        public int size;
+
+        @XmlElement
+        public List<Image> content;
+	}
     
     @XmlRootElement
     @NoArgsConstructor

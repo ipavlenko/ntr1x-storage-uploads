@@ -4,8 +4,7 @@ import java.util.UUID;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.inject.Provider;
 import javax.transaction.Transactional;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Component;
 import com.ntr1x.storage.core.model.Image;
 import com.ntr1x.storage.core.services.IFileService;
 import com.ntr1x.storage.core.transport.PageableQuery;
+import com.ntr1x.storage.security.filters.IUserScope;
 import com.ntr1x.storage.uploads.services.IImageService;
 import com.ntr1x.storage.uploads.services.IImageService.ImagePageResponse;
 
@@ -38,8 +38,8 @@ public class ImageResource {
     @Inject
     private IImageService images;
     
-    @PersistenceContext
-    private EntityManager em;
+    @Inject
+    private Provider<IUserScope> scope;
     
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -51,6 +51,7 @@ public class ImageResource {
 	) {
 		
 		Page<Image> p = images.query(
+			scope.get().getId(),
 			aspect,
 			pageable.toPageRequest()
 		);
@@ -72,7 +73,7 @@ public class ImageResource {
         @PathParam("format") String format
     ) {
 	    
-	    Image upload = images.select(id);
+	    Image upload = images.select(scope.get().getId(), id);
 	    
         return Response
             .ok(files.resolve(String.format("%s/%s.%s", upload.getUuid(), name, format)))
@@ -90,7 +91,7 @@ public class ImageResource {
         @PathParam("format") String format
     ) {
         
-        Image upload = images.select(uuid);
+        Image upload = images.select(scope.get().getId(), uuid);
         
         return Response
             .ok(files.resolve(String.format("%s/%s.%s", upload.getUuid(), name, format)))
@@ -106,7 +107,7 @@ public class ImageResource {
     public Image select(
         @PathParam("id") long id
     ) {
-        Image upload = em.find(Image.class, id);
+        Image upload = images.select(scope.get().getId(), id);
         return upload;
     }
 	
@@ -117,6 +118,6 @@ public class ImageResource {
     public Image select(
         @PathParam("uuid") UUID uuid
     ) {
-	    return images.select(uuid);
+	    return images.select(scope.get().getId(), uuid);
     }
 }

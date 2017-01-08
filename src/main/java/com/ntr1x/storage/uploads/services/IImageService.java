@@ -21,13 +21,13 @@ import lombok.NoArgsConstructor;
 
 public interface IImageService {
 
-	Image upload(ImageCreate create);
-	Image remove(long id);
+	Image upload(long scope, ImageCreate create);
+	Image remove(Long scope, long id);
 
-    Page<Image> query(String aspect, Pageable pageable);
+    Page<Image> query(Long scope, String aspect, Pageable pageable);
     
-    Image select(long id);
-    Image select(UUID uuid);
+    Image select(Long scope, long id);
+    Image select(Long scope, UUID uuid);
 	
     void createImages(Resource resource, RelatedImage[] images);
     void updateImages(Resource resource, RelatedImage[] images);

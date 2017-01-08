@@ -24,5 +24,19 @@ public interface ImageRepository extends JpaRepository<Image, Long> {
         Pageable pageable
     );
     
-    Image findByUuid(UUID uuid);
+    @Query(
+        " SELECT i"
+      + " FROM Image i"
+      + " WHERE (:scope IS NULL OR i.scope = :scope)"
+      + "   AND i.id = :id"
+    )
+    Image select(@Param("scope") Long scope, @Param("id") long id);
+    
+    @Query(
+        " SELECT i"
+      + " FROM Image i"
+      + " WHERE (:scope IS NULL OR i.scope = :scope)"
+      + "   AND i.uuid = :uuid"
+    )
+    Image select(@Param("scope") Long scope, @Param("uuid") UUID uuid);
 }

@@ -22,7 +22,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.stereotype.Component;
 
 import com.ntr1x.storage.core.model.Image;
-import com.ntr1x.storage.security.model.ISession;
+import com.ntr1x.storage.security.filters.IUserPrincipal;
+import com.ntr1x.storage.security.filters.IUserScope;
 import com.ntr1x.storage.uploads.converter.ImageSettingsProvider;
 import com.ntr1x.storage.uploads.services.IImageService;
 import com.ntr1x.storage.uploads.services.IImageService.ImageCreate;
@@ -44,32 +45,38 @@ public class ImageMe {
 	
     @Inject
     private IImageService images;
+
+    @Inject
+    private Provider<IUserScope> scope;
     
     @Inject
-    private Provider<ISession> session;
+    private Provider<IUserPrincipal> principal;
 	
 	@POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "auth" })
     @Transactional
-    @ApiOperation("Alternative for the POST /images/m2m method. Workaround for: https://github.com/OAI/OpenAPI-Specification/issues/222")
+    @ApiOperation("Alternative for the POST /me/images/m2m. Workaround for: https://github.com/OAI/OpenAPI-Specification/issues/222")
     public Image upload(
             @ApiParam(name = "file") @FormDataParam("file") InputStream stream,
             @FormDataParam("file") FormDataContentDisposition header,
             @ApiParam(example = SETTINGS_EXAMPLE) @FormDataParam("settings") String settings
     ) {
 
-        return images.upload(new ImageCreate(
-    		() -> {
-    			File source = Files.createTempFile("upload", ".tmp").toFile();
-	            FileUtils.copyInputStreamToFile(stream, source);
-    	        return source;
-    		},
-    		session.get().getUser().getId(),
-    		header == null ? null : header.getFileName(),
-			new ImageSettingsProvider.ImageSettingsConverter().fromString(settings)
-		));
+        return images.upload(
+    		scope.get().getId(),
+    		new ImageCreate(
+	    		() -> {
+	    			File source = Files.createTempFile("upload", ".tmp").toFile();
+		            FileUtils.copyInputStreamToFile(stream, source);
+	    	        return source;
+	    		},
+	    		principal.get().getUser().getId(),
+	    		header == null ? null : header.getFileName(),
+				new ImageSettingsProvider.ImageSettingsConverter().fromString(settings)
+			)
+		);
     }
     
 	// Workaround for https://github.com/OAI/OpenAPI-Specification/issues/222
@@ -79,22 +86,25 @@ public class ImageMe {
     @Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed({ "auth" })
     @Transactional
-    @ApiOperation("Alternative for the POST /images method. Doesn't work from the Swagger-UI. Discussed here: https://github.com/OAI/OpenAPI-Specification/issues/222")
+    @ApiOperation("Alternative for the POST /me/images. Doesn't work from the Swagger-UI. Discussed here: https://github.com/OAI/OpenAPI-Specification/issues/222")
     public Image upload(
 			@ApiParam(name = "file") @FormDataParam("file") InputStream stream,
 			@FormDataParam("file") FormDataContentDisposition header,
 			@ApiParam(example = SETTINGS_EXAMPLE) @FormDataParam("settings") IImageService.ImageSettings settings
     ) {
 
-        return images.upload(new ImageCreate(
-    		() -> {
-    			File source = Files.createTempFile("upload", ".tmp").toFile();
-	            FileUtils.copyInputStreamToFile(stream, source);
-    	        return source;
-    		},
-    		session.get().getUser().getId(),
-    		header == null ? null : header.getFileName(),
-			settings
-		));
+        return images.upload(
+    		scope.get().getId(),
+    		new ImageCreate(
+	    		() -> {
+	    			File source = Files.createTempFile("upload", ".tmp").toFile();
+		            FileUtils.copyInputStreamToFile(stream, source);
+	    	        return source;
+	    		},
+	    		principal.get().getUser().getId(),
+	    		header == null ? null : header.getFileName(),
+				settings
+			)
+		);
     }
 }

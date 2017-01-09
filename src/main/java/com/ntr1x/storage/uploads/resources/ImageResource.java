@@ -18,10 +18,10 @@ import javax.ws.rs.core.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.ntr1x.storage.core.filters.IUserScope;
 import com.ntr1x.storage.core.model.Image;
 import com.ntr1x.storage.core.services.IFileService;
 import com.ntr1x.storage.core.transport.PageableQuery;
-import com.ntr1x.storage.security.filters.IUserScope;
 import com.ntr1x.storage.uploads.services.IImageService;
 import com.ntr1x.storage.uploads.services.IImageService.ImagePageResponse;
 

@@ -21,9 +21,9 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.stereotype.Component;
 
+import com.ntr1x.storage.core.filters.IUserScope;
 import com.ntr1x.storage.core.model.Image;
 import com.ntr1x.storage.security.filters.IUserPrincipal;
-import com.ntr1x.storage.security.filters.IUserScope;
 import com.ntr1x.storage.uploads.converter.ImageSettingsProvider;
 import com.ntr1x.storage.uploads.services.IImageService;
 import com.ntr1x.storage.uploads.services.IImageService.ImageCreate;
@@ -86,7 +86,7 @@ public class ImageMe {
     @Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed({ "auth" })
     @Transactional
-    @ApiOperation("Alternative for the POST /me/images. Doesn't work from the Swagger-UI. Discussed here: https://github.com/OAI/OpenAPI-Specification/issues/222")
+    @ApiOperation("Doesn't work from the Swagger-UI. Discussed here: https://github.com/OAI/OpenAPI-Specification/issues/222")
     public Image upload(
 			@ApiParam(name = "file") @FormDataParam("file") InputStream stream,
 			@FormDataParam("file") FormDataContentDisposition header,

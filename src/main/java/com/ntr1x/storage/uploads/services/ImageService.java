@@ -61,7 +61,7 @@ public class ImageService implements IImageService {
         em.flush();
         
         security.register(image, ResourceUtils.alias(null, "images/i", image));
-		security.grant(user, image.getAlias(), "admin");
+		security.grant(image.getScope(), user, image.getAlias(), "admin");
         
         try {
             

@@ -121,8 +121,8 @@ public class ImageService implements IImageService {
     public Page<Image> query(Long scope, String aspect, Pageable pageable) {
     	
     	return aspect != null && !aspect.isEmpty()
-            ? images.query(aspect, pageable)
-            : images.findAll(pageable)
+            ? images.query(scope, aspect, pageable)
+            : images.query(scope, pageable)
 	    ;
     }
     

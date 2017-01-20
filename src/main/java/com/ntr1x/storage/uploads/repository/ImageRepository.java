@@ -11,16 +11,28 @@ import org.springframework.data.repository.query.Param;
 import com.ntr1x.storage.core.model.Image;
 
 public interface ImageRepository extends JpaRepository<Image, Long> {
-
+	
     @Query(
         " SELECT DISTINCT i"
       + " FROM"
       + "   Image i"
       + "   JOIN i.aspects a"
-      + " WHERE (:aspect IS NULL OR a = :aspect)"
+      + " WHERE (:scope IS NULL OR i.scope = :scope)"
+      + "   AND (:aspect IS NULL OR a = :aspect)"
     )
     Page<Image> query(
+		@Param("scope") Long scope,
         @Param("aspect") String aspect,
+        Pageable pageable
+    );
+    
+    @Query(
+        " SELECT DISTINCT i"
+      + " FROM Image i"
+      + " WHERE (:scope IS NULL OR i.scope = :scope)"
+    )
+    Page<Image> query(
+		@Param("scope") Long scope,
         Pageable pageable
     );
     

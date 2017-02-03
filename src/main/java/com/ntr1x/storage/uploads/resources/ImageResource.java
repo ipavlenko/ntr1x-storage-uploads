@@ -29,7 +29,7 @@ import io.swagger.annotations.Api;
 
 @Api("Uploads")
 @Component
-@Path("/images")
+@Path("/uploads/images")
 public class ImageResource {
     
     @Inject

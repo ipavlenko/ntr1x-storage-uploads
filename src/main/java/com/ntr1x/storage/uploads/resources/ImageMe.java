@@ -34,7 +34,7 @@ import io.swagger.annotations.ApiParam;
 
 @Api("Me")
 @Component
-@Path("/me/images")
+@Path("/me/uploads/images")
 public class ImageMe {
 	
 	private static final String SETTINGS_EXAMPLE =

@@ -23,8 +23,8 @@ import org.springframework.stereotype.Component;
 
 import com.ntr1x.storage.core.filters.IUserScope;
 import com.ntr1x.storage.core.model.Image;
+import com.ntr1x.storage.core.services.ISerializationService;
 import com.ntr1x.storage.security.filters.IUserPrincipal;
-import com.ntr1x.storage.uploads.converter.ImageSettingsProvider;
 import com.ntr1x.storage.uploads.services.IImageService;
 import com.ntr1x.storage.uploads.services.IImageService.ImageCreate;
 
@@ -45,6 +45,9 @@ public class ImageMe {
 	
     @Inject
     private IImageService images;
+    
+    @Inject
+    private ISerializationService serialization;
 
     @Inject
     private Provider<IUserScope> scope;
@@ -57,7 +60,7 @@ public class ImageMe {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "auth" })
     @Transactional
-    @ApiOperation("Alternative for the POST /me/images/m2m. Workaround for: https://github.com/OAI/OpenAPI-Specification/issues/222")
+    @ApiOperation("Alternative for the POST /me/uploads/images/m2m. Workaround for: https://github.com/OAI/OpenAPI-Specification/issues/222")
     public Image upload(
             @ApiParam(name = "file") @FormDataParam("file") InputStream stream,
             @FormDataParam("file") FormDataContentDisposition header,
@@ -74,7 +77,7 @@ public class ImageMe {
 	    		},
 	    		principal.get().getUser().getId(),
 	    		header == null ? null : header.getFileName(),
-				new ImageSettingsProvider.ImageSettingsConverter().fromString(settings)
+				serialization.parseJSONStringJackson(IImageService.ImageSettings.class, settings)
 			)
 		);
     }

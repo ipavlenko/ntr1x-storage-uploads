@@ -71,6 +71,9 @@ public interface IImageService {
     @AllArgsConstructor
     public static class ImageSettings {
         
+    	@XmlElement
+    	public String[] aspects;
+    	
         @XmlElement
         public Item[] items;
         

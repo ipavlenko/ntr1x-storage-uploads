@@ -1,6 +1,7 @@
 package com.ntr1x.storage.uploads.services;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -53,6 +54,7 @@ public class ImageService implements IImageService {
     		image.setScope(scope);
             image.setUuid(UUID.randomUUID());
             image.setOriginal(create.original);
+        	image.setAspects(Arrays.asList(create.settings.aspects));
         };
         
         User user = users.select(scope, create.user);

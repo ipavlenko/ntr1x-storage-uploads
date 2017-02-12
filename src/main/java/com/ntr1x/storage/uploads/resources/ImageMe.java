@@ -38,7 +38,7 @@ import io.swagger.annotations.ApiParam;
 public class ImageMe {
 	
 	private static final String SETTINGS_EXAMPLE =
-        "{ \"items\":[ { \"name\": \"cover-240x100\", \"format\": \"png\", \"width\": 240, \"height\": 100, \"type\": \"COVER\" } ] }";
+        "{ \"aspects\": [ \"upload\" ],  \"items\":[ { \"name\": \"cover-240x100\", \"format\": \"png\", \"width\": 240, \"height\": 100, \"type\": \"COVER\" } ] }";
 	
 	@PersistenceContext
     private EntityManager em;

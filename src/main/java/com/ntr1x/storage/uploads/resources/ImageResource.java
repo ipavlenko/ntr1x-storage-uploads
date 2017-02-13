@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.transaction.Transactional;
 import javax.ws.rs.BeanParam;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -118,6 +119,18 @@ public class ImageResource {
     public Image select(
         @PathParam("uuid") UUID uuid
     ) {
-	    return images.select(scope.get().getId(), uuid);
+		// do not use scope here
+	    return images.select(null, uuid);
+    }
+	
+	@DELETE
+    @Path("/i/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Transactional
+    @RolesAllowed({ "res:///images/i/{id}:admin" })
+    public Image remove(
+		@PathParam("id") long id
+    ) {
+	    return images.remove(scope.get().getId(), id);
     }
 }

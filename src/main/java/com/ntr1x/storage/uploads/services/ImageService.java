@@ -54,7 +54,10 @@ public class ImageService implements IImageService {
     		image.setScope(scope);
             image.setUuid(UUID.randomUUID());
             image.setOriginal(create.original);
-        	image.setAspects(Arrays.asList(create.settings.aspects));
+        	image.setAspects(create.settings.aspects == null
+    			? null
+				: Arrays.asList(create.settings.aspects)
+			);
         };
         
         User user = users.select(scope, create.user);

@@ -91,8 +91,8 @@ public class ImageResource {
         @PathParam("name") String name,
         @PathParam("format") String format
     ) {
-        
-        Image upload = images.select(scope.get().getId(), uuid);
+		// do not use scope here
+        Image upload = images.select(null, uuid);
         
         return Response
             .ok(files.resolve(String.format("%s/%s.%s", upload.getUuid(), name, format)))

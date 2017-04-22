@@ -84,6 +84,7 @@ public class ImageService implements IImageService {
             		scale.scale(
                         ImageIO.read(source),
                         item.type,
+                        "png".equalsIgnoreCase(item.format), // allow transparency
                         item.width,
                         item.height
                     ),

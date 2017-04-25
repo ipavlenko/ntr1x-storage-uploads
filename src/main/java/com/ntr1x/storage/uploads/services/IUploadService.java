@@ -20,14 +20,14 @@ import lombok.NoArgsConstructor;
 
 public interface IUploadService {
 
-	Upload upload(long scope, UploadCreate create);
-	Upload remove(Long scope, long id);
+    Upload upload(long scope, UploadCreate create);
+    Upload remove(Long scope, long id);
 
     Page<Upload> query(Long scope, String aspect, Pageable pageable);
     
     Upload select(Long scope, long id);
     Upload select(Long scope, UUID uuid);
-	
+    
     void createUploads(Resource resource, RelatedUpload[] uploads);
     void updateUploads(Resource resource, RelatedUpload[] uploads);
     
@@ -36,13 +36,13 @@ public interface IUploadService {
     @AllArgsConstructor
     public static class UploadPageResponse {
 
-    	public long count;
+        public long count;
         public int page;
         public int size;
 
         @XmlElement
         public List<Upload> content;
-	}
+    }
     
     @XmlRootElement
     @NoArgsConstructor
@@ -58,11 +58,11 @@ public interface IUploadService {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class UploadCreate {
-    	
-    	public Callable<File> file;
-    	public long user;
-    	public String original;
-    	public UploadSettings settings;
+        
+        public Callable<File> file;
+        public long user;
+        public String original;
+        public UploadSettings settings;
     }
     
     @XmlRootElement
@@ -70,7 +70,7 @@ public interface IUploadService {
     @AllArgsConstructor
     public static class UploadSettings {
         
-    	@XmlElement
-    	public String[] aspects;
+        @XmlElement
+        public String[] aspects;
     }
 }

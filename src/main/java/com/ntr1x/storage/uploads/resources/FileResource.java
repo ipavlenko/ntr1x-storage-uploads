@@ -33,49 +33,49 @@ import io.swagger.annotations.Api;
 @Path("/uploads/files")
 public class FileResource {
     
-	@Inject
+    @Inject
     private IFileService files;
-	
+    
     @Inject
     private IUploadService uploads;
     
     @Inject
     private Provider<IUserScope> scope;
     
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@RolesAllowed({ "res:///uploads:admin" })
-	@Transactional
-	public UploadPageResponse list(
-	    @QueryParam("aspect") String aspect,
-		@BeanParam PageableQuery pageable
-	) {
-		
-		Page<Upload> p = uploads.query(
-			scope.get().getId(),
-			aspect,
-			pageable.toPageRequest()
-		);
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "res:///uploads:admin" })
+    @Transactional
+    public UploadPageResponse list(
+        @QueryParam("aspect") String aspect,
+        @BeanParam PageableQuery pageable
+    ) {
+        
+        Page<Upload> p = uploads.query(
+            scope.get().getId(),
+            aspect,
+            pageable.toPageRequest()
+        );
         
         return new UploadPageResponse(
-    		p.getTotalElements(),
-    		p.getNumber(),
-    		p.getSize(),
-    		p.getContent()
-		);
-	}
-	
-	@GET
-	@Path("/i/{id}/file")
+            p.getTotalElements(),
+            p.getNumber(),
+            p.getSize(),
+            p.getContent()
+        );
+    }
+    
+    @GET
+    @Path("/i/{id}/file")
     @Transactional
     public Response selectFile(
         @PathParam("id") long id
     ) {
-	    
-	    Upload upload = uploads.select(scope.get().getId(), id);
-	    
-	    String original = upload.getOriginal();
-	    
+        
+        Upload upload = uploads.select(scope.get().getId(), id);
+        
+        String original = upload.getOriginal();
+        
         return Response
             .ok(files.resolve(upload.getUuid().toString()))
             .header("Content-Type", MediaType.APPLICATION_OCTET_STREAM)
@@ -83,27 +83,27 @@ public class FileResource {
             .build()
         ;
     }
-	
-	@GET
+    
+    @GET
     @Path("/u/{uuid}/file")
     @Transactional
     public Response selectFile(
         @PathParam("uuid") UUID uuid
     ) {
-		// do not use scope here
+        // do not use scope here
         Upload upload = uploads.select(null, uuid);
         
         String original = upload.getOriginal();
-	    
+        
         return Response
-    		.ok(files.resolve(upload.getUuid().toString()))
+            .ok(files.resolve(upload.getUuid().toString()))
             .header("Content-Type", MediaType.APPLICATION_OCTET_STREAM)
             .header("Content-Disposition", String.format("attachment; filename=\"%s\"", original == null ? "file" : original.replaceAll("\"","\\\"")))
             .build()
         ;
     }
-	
-	@GET
+    
+    @GET
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
@@ -113,26 +113,26 @@ public class FileResource {
         Upload upload = uploads.select(scope.get().getId(), id);
         return upload;
     }
-	
-	@GET
+    
+    @GET
     @Path("/u/{uuid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Upload select(
         @PathParam("uuid") UUID uuid
     ) {
-		// do not use scope here
-	    return uploads.select(null, uuid);
+        // do not use scope here
+        return uploads.select(null, uuid);
     }
-	
-	@DELETE
+    
+    @DELETE
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     @RolesAllowed({ "res:///uploads/i/{id}:admin" })
     public Upload remove(
-		@PathParam("id") long id
+        @PathParam("id") long id
     ) {
-	    return uploads.remove(scope.get().getId(), id);
+        return uploads.remove(scope.get().getId(), id);
     }
 }

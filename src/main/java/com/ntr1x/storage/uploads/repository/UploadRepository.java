@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import com.ntr1x.storage.core.model.Upload;
 
 public interface UploadRepository extends JpaRepository<Upload, Long> {
-	
+    
     @Query(
         " SELECT DISTINCT i"
       + " FROM"
@@ -21,7 +21,7 @@ public interface UploadRepository extends JpaRepository<Upload, Long> {
       + "   AND (:aspect IS NULL OR a = :aspect)"
     )
     Page<Upload> query(
-		@Param("scope") Long scope,
+        @Param("scope") Long scope,
         @Param("aspect") String aspect,
         Pageable pageable
     );
@@ -32,7 +32,7 @@ public interface UploadRepository extends JpaRepository<Upload, Long> {
       + " WHERE (:scope IS NULL OR i.scope = :scope)"
     )
     Page<Upload> query(
-		@Param("scope") Long scope,
+        @Param("scope") Long scope,
         Pageable pageable
     );
     

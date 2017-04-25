@@ -36,13 +36,13 @@ import io.swagger.annotations.ApiParam;
 @Component
 @Path("/me/uploads/images")
 public class ImageMe {
-	
-	private static final String SETTINGS_EXAMPLE =
+    
+    private static final String SETTINGS_EXAMPLE =
         "{ \"aspects\": [ \"upload\" ],  \"items\":[ { \"name\": \"cover-240x100\", \"format\": \"png\", \"width\": 240, \"height\": 100, \"type\": \"COVER\" } ] }";
-	
-	@PersistenceContext
+    
+    @PersistenceContext
     private EntityManager em;
-	
+    
     @Inject
     private IImageService images;
     
@@ -54,8 +54,8 @@ public class ImageMe {
     
     @Inject
     private Provider<IUserPrincipal> principal;
-	
-	@POST
+    
+    @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "auth" })
@@ -68,46 +68,46 @@ public class ImageMe {
     ) {
 
         return images.upload(
-    		scope.get().getId(),
-    		new ImageCreate(
-	    		() -> {
-	    			File source = Files.createTempFile("upload", ".tmp").toFile();
-		            FileUtils.copyInputStreamToFile(stream, source);
-	    	        return source;
-	    		},
-	    		principal.get().getUser().getId(),
-	    		header == null ? null : header.getFileName(),
-				serialization.parseJSONStringJackson(IImageService.ImageSettings.class, settings)
-			)
-		);
+            scope.get().getId(),
+            new ImageCreate(
+                () -> {
+                    File source = Files.createTempFile("upload", ".tmp").toFile();
+                    FileUtils.copyInputStreamToFile(stream, source);
+                    return source;
+                },
+                principal.get().getUser().getId(),
+                header == null ? null : header.getFileName(),
+                serialization.parseJSONStringJackson(IImageService.ImageSettings.class, settings)
+            )
+        );
     }
     
-	// Workaround for https://github.com/OAI/OpenAPI-Specification/issues/222
+    // Workaround for https://github.com/OAI/OpenAPI-Specification/issues/222
     @POST
     @Path("/m2m")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-	@RolesAllowed({ "auth" })
+    @RolesAllowed({ "auth" })
     @Transactional
     @ApiOperation("Doesn't work from the Swagger-UI. Discussed here: https://github.com/OAI/OpenAPI-Specification/issues/222")
     public Image upload(
-			@ApiParam(name = "file") @FormDataParam("file") InputStream stream,
-			@FormDataParam("file") FormDataContentDisposition header,
-			@ApiParam(example = SETTINGS_EXAMPLE) @FormDataParam("settings") IImageService.ImageSettings settings
+            @ApiParam(name = "file") @FormDataParam("file") InputStream stream,
+            @FormDataParam("file") FormDataContentDisposition header,
+            @ApiParam(example = SETTINGS_EXAMPLE) @FormDataParam("settings") IImageService.ImageSettings settings
     ) {
 
         return images.upload(
-    		scope.get().getId(),
-    		new ImageCreate(
-	    		() -> {
-	    			File source = Files.createTempFile("upload", ".tmp").toFile();
-		            FileUtils.copyInputStreamToFile(stream, source);
-	    	        return source;
-	    		},
-	    		principal.get().getUser().getId(),
-	    		header == null ? null : header.getFileName(),
-				settings
-			)
-		);
+            scope.get().getId(),
+            new ImageCreate(
+                () -> {
+                    File source = Files.createTempFile("upload", ".tmp").toFile();
+                    FileUtils.copyInputStreamToFile(stream, source);
+                    return source;
+                },
+                principal.get().getUser().getId(),
+                header == null ? null : header.getFileName(),
+                settings
+            )
+        );
     }
 }

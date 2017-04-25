@@ -49,15 +49,15 @@ public class ImageService implements IImageService {
     
     @Override
     public Image upload(long scope, ImageCreate create) {
-    	
-    	Image image = new Image(); {
-    		image.setScope(scope);
+        
+        Image image = new Image(); {
+            image.setScope(scope);
             image.setUuid(UUID.randomUUID());
             image.setOriginal(create.original);
-        	image.setAspects(create.settings.aspects == null
-    			? null
-				: Arrays.asList(create.settings.aspects)
-			);
+            image.setAspects(create.settings.aspects == null
+                ? null
+                : Arrays.asList(create.settings.aspects)
+            );
         };
         
         User user = users.select(scope, create.user);
@@ -66,7 +66,7 @@ public class ImageService implements IImageService {
         em.flush();
         
         security.register(image, ResourceUtils.alias(null, "images/i", image));
-		security.grant(image.getScope(), user, image.getAlias(), "admin");
+        security.grant(image.getScope(), user, image.getAlias(), "admin");
         
         try {
             
@@ -81,7 +81,7 @@ public class ImageService implements IImageService {
                 File target = new File(dir, String.format("%s.%s", item.name, item.format));
                 
                 ImageIO.write(
-            		scale.scale(
+                    scale.scale(
                         ImageIO.read(source),
                         item.type,
                         "png".equalsIgnoreCase(item.format), // allow transparency
@@ -103,33 +103,33 @@ public class ImageService implements IImageService {
     
     @Override
     public Image remove(Long scope, long id) {
-    	
-    	Image image = images.select(scope, id); {
-    		
-    		em.remove(image);
-        	em.flush();
-    	}
-    	
-    	return image;
+        
+        Image image = images.select(scope, id); {
+            
+            em.remove(image);
+            em.flush();
+        }
+        
+        return image;
     }
     
     @Override
     public Image select(Long scope, long id) {
-    	return images.select(scope, id);
+        return images.select(scope, id);
     }
     
     @Override
-	public Image select(Long scope, UUID uuid) {
-		return images.select(scope, uuid);
-	}
+    public Image select(Long scope, UUID uuid) {
+        return images.select(scope, uuid);
+    }
     
     @Override
     public Page<Image> query(Long scope, String aspect, Pageable pageable) {
-    	
-    	return aspect != null && !aspect.isEmpty()
+        
+        return aspect != null && !aspect.isEmpty()
             ? images.query(scope, aspect, pageable)
             : images.query(scope, pageable)
-	    ;
+        ;
     }
     
     @Override
@@ -185,11 +185,11 @@ public class ImageService implements IImageService {
                     case REMOVE: {
                         
                         ResourceImage v = em.find(ResourceImage.class, p.id); {
-                        	
-                        	if (v.getRelate().getId() != resource.getId() || v.getRelate().getScope() != resource.getScope()) {
-                        		throw new ForbiddenException("Image relates to another scope or resource");
-                        	}
-                        	em.remove(v);
+                            
+                            if (v.getRelate().getId() != resource.getId() || v.getRelate().getScope() != resource.getScope()) {
+                                throw new ForbiddenException("Image relates to another scope or resource");
+                            }
+                            em.remove(v);
                         }
                         break;
                     }

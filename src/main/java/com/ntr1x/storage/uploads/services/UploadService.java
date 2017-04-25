@@ -45,15 +45,15 @@ public class UploadService implements IUploadService {
     
     @Override
     public Upload upload(long scope, UploadCreate create) {
-    	
-    	Upload upload = new Upload(); {
-    		upload.setScope(scope);
-    		upload.setUuid(UUID.randomUUID());
-    		upload.setOriginal(create.original);
-    		upload.setAspects(create.settings.aspects == null
-    			? null
-				: Arrays.asList(create.settings.aspects)
-			);
+        
+        Upload upload = new Upload(); {
+            upload.setScope(scope);
+            upload.setUuid(UUID.randomUUID());
+            upload.setOriginal(create.original);
+            upload.setAspects(create.settings.aspects == null
+                ? null
+                : Arrays.asList(create.settings.aspects)
+            );
         }
         
         User user = users.select(scope, create.user);
@@ -62,7 +62,7 @@ public class UploadService implements IUploadService {
         em.flush();
         
         security.register(upload, ResourceUtils.alias(null, "uploads/i", upload));
-		security.grant(upload.getScope(), user, upload.getAlias(), "admin");
+        security.grant(upload.getScope(), user, upload.getAlias(), "admin");
         
         try {
             
@@ -81,33 +81,33 @@ public class UploadService implements IUploadService {
     
     @Override
     public Upload remove(Long scope, long id) {
-    	
-    	Upload upload = uploads.select(scope, id); {
-    		
-    		em.remove(upload);
-        	em.flush();
-    	}
-    	
-    	return upload;
+        
+        Upload upload = uploads.select(scope, id); {
+            
+            em.remove(upload);
+            em.flush();
+        }
+        
+        return upload;
     }
     
     @Override
     public Upload select(Long scope, long id) {
-    	return uploads.select(scope, id);
+        return uploads.select(scope, id);
     }
     
     @Override
-	public Upload select(Long scope, UUID uuid) {
-		return uploads.select(scope, uuid);
-	}
+    public Upload select(Long scope, UUID uuid) {
+        return uploads.select(scope, uuid);
+    }
     
     @Override
     public Page<Upload> query(Long scope, String aspect, Pageable pageable) {
-    	
-    	return aspect != null && !aspect.isEmpty()
+        
+        return aspect != null && !aspect.isEmpty()
             ? uploads.query(scope, aspect, pageable)
             : uploads.query(scope, pageable)
-	    ;
+        ;
     }
     
     @Override
@@ -119,7 +119,7 @@ public class UploadService implements IUploadService {
                 
                 ResourceUpload v = new ResourceUpload(); {
                     
-                	Upload e = em.find(Upload.class, p.upload);
+                    Upload e = em.find(Upload.class, p.upload);
                     
                     v.setScope(resource.getScope());
                     v.setRelate(resource);
@@ -146,7 +146,7 @@ public class UploadService implements IUploadService {
                         
                         ResourceUpload v = new ResourceUpload(); {
                             
-                        	Upload e = select(resource.getScope(), p.upload);
+                            Upload e = select(resource.getScope(), p.upload);
                     
                             v.setScope(resource.getScope());
                             v.setRelate(resource);
@@ -163,11 +163,11 @@ public class UploadService implements IUploadService {
                     case REMOVE: {
                         
                         ResourceUpload v = em.find(ResourceUpload.class, p.id); {
-                        	
-                        	if (v.getRelate().getId() != resource.getId() || v.getRelate().getScope() != resource.getScope()) {
-                        		throw new ForbiddenException("Upload relates to another scope or resource");
-                        	}
-                        	em.remove(v);
+                            
+                            if (v.getRelate().getId() != resource.getId() || v.getRelate().getScope() != resource.getScope()) {
+                                throw new ForbiddenException("Upload relates to another scope or resource");
+                            }
+                            em.remove(v);
                         }
                         break;
                     }

@@ -36,14 +36,14 @@ import io.swagger.annotations.ApiParam;
 @Component
 @Path("/me/uploads/files")
 public class FileMe {
-	
-	private static final String SETTINGS_EXAMPLE =
+    
+    private static final String SETTINGS_EXAMPLE =
         "{ \"aspects\": [ \"upload\" ] }";
-		
-	
-	@PersistenceContext
+        
+    
+    @PersistenceContext
     private EntityManager em;
-	
+    
     @Inject
     private IUploadService uploads;
     
@@ -55,8 +55,8 @@ public class FileMe {
     
     @Inject
     private Provider<IUserPrincipal> principal;
-	
-	@POST
+    
+    @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({ "auth" })
@@ -69,46 +69,46 @@ public class FileMe {
     ) {
 
         return uploads.upload(
-    		scope.get().getId(),
-    		new UploadCreate(
-	    		() -> {
-	    			File source = Files.createTempFile("upload", ".tmp").toFile();
-		            FileUtils.copyInputStreamToFile(stream, source);
-	    	        return source;
-	    		},
-	    		principal.get().getUser().getId(),
-	    		header == null ? null : header.getFileName(),
-				serialization.parseJSONStringJackson(IUploadService.UploadSettings.class, settings)
-			)
-		);
+            scope.get().getId(),
+            new UploadCreate(
+                () -> {
+                    File source = Files.createTempFile("upload", ".tmp").toFile();
+                    FileUtils.copyInputStreamToFile(stream, source);
+                    return source;
+                },
+                principal.get().getUser().getId(),
+                header == null ? null : header.getFileName(),
+                serialization.parseJSONStringJackson(IUploadService.UploadSettings.class, settings)
+            )
+        );
     }
     
-	// Workaround for https://github.com/OAI/OpenAPI-Specification/issues/222
+    // Workaround for https://github.com/OAI/OpenAPI-Specification/issues/222
     @POST
     @Path("/m2m")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-	@RolesAllowed({ "auth" })
+    @RolesAllowed({ "auth" })
     @Transactional
     @ApiOperation("Doesn't work from the Swagger-UI. Discussed here: https://github.com/OAI/OpenAPI-Specification/issues/222")
     public Upload upload(
-			@ApiParam(name = "file") @FormDataParam("file") InputStream stream,
-			@FormDataParam("file") FormDataContentDisposition header,
-			@ApiParam(example = SETTINGS_EXAMPLE) @FormDataParam("settings") IUploadService.UploadSettings settings
+            @ApiParam(name = "file") @FormDataParam("file") InputStream stream,
+            @FormDataParam("file") FormDataContentDisposition header,
+            @ApiParam(example = SETTINGS_EXAMPLE) @FormDataParam("settings") IUploadService.UploadSettings settings
     ) {
 
         return uploads.upload(
-    		scope.get().getId(),
-    		new UploadCreate(
-	    		() -> {
-	    			File source = Files.createTempFile("upload", ".tmp").toFile();
-		            FileUtils.copyInputStreamToFile(stream, source);
-	    	        return source;
-	    		},
-	    		principal.get().getUser().getId(),
-	    		header == null ? null : header.getFileName(),
-				settings
-			)
-		);
+            scope.get().getId(),
+            new UploadCreate(
+                () -> {
+                    File source = Files.createTempFile("upload", ".tmp").toFile();
+                    FileUtils.copyInputStreamToFile(stream, source);
+                    return source;
+                },
+                principal.get().getUser().getId(),
+                header == null ? null : header.getFileName(),
+                settings
+            )
+        );
     }
 }

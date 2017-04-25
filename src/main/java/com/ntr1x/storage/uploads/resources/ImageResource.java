@@ -42,48 +42,48 @@ public class ImageResource {
     @Inject
     private Provider<IUserScope> scope;
     
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@RolesAllowed({ "res:///images:admin" })
-	@Transactional
-	public ImagePageResponse list(
-	    @QueryParam("aspect") String aspect,
-		@BeanParam PageableQuery pageable
-	) {
-		
-		Page<Image> p = images.query(
-			scope.get().getId(),
-			aspect,
-			pageable.toPageRequest()
-		);
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({ "res:///images:admin" })
+    @Transactional
+    public ImagePageResponse list(
+        @QueryParam("aspect") String aspect,
+        @BeanParam PageableQuery pageable
+    ) {
+        
+        Page<Image> p = images.query(
+            scope.get().getId(),
+            aspect,
+            pageable.toPageRequest()
+        );
         
         return new ImagePageResponse(
-    		p.getTotalElements(),
-    		p.getNumber(),
-    		p.getSize(),
-    		p.getContent()
-		);
-	}
-	
-	@GET
-	@Path("/i/{id}/{name}.{format}")
+            p.getTotalElements(),
+            p.getNumber(),
+            p.getSize(),
+            p.getContent()
+        );
+    }
+    
+    @GET
+    @Path("/i/{id}/{name}.{format}")
     @Transactional
     public Response selectImage(
         @PathParam("id") long id,
         @PathParam("name") String name,
         @PathParam("format") String format
     ) {
-	    
-	    Image upload = images.select(scope.get().getId(), id);
-	    
+        
+        Image upload = images.select(scope.get().getId(), id);
+        
         return Response
             .ok(files.resolve(String.format("%s/%s.%s", upload.getUuid(), name, format)))
             .header("Content-Type", String.format("image/%s", format))
             .build()
         ;
     }
-	
-	@GET
+    
+    @GET
     @Path("/u/{uuid}/{name}.{format}")
     @Transactional
     public Response selectImage(
@@ -91,7 +91,7 @@ public class ImageResource {
         @PathParam("name") String name,
         @PathParam("format") String format
     ) {
-		// do not use scope here
+        // do not use scope here
         Image upload = images.select(null, uuid);
         
         return Response
@@ -100,8 +100,8 @@ public class ImageResource {
             .build()
         ;
     }
-	
-	@GET
+    
+    @GET
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
@@ -111,26 +111,26 @@ public class ImageResource {
         Image upload = images.select(scope.get().getId(), id);
         return upload;
     }
-	
-	@GET
+    
+    @GET
     @Path("/u/{uuid}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     public Image select(
         @PathParam("uuid") UUID uuid
     ) {
-		// do not use scope here
-	    return images.select(null, uuid);
+        // do not use scope here
+        return images.select(null, uuid);
     }
-	
-	@DELETE
+    
+    @DELETE
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
     @RolesAllowed({ "res:///images/i/{id}:admin" })
     public Image remove(
-		@PathParam("id") long id
+        @PathParam("id") long id
     ) {
-	    return images.remove(scope.get().getId(), id);
+        return images.remove(scope.get().getId(), id);
     }
 }

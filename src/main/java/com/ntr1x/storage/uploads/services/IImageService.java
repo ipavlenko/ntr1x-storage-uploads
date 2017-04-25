@@ -21,14 +21,14 @@ import lombok.NoArgsConstructor;
 
 public interface IImageService {
 
-	Image upload(long scope, ImageCreate create);
-	Image remove(Long scope, long id);
+    Image upload(long scope, ImageCreate create);
+    Image remove(Long scope, long id);
 
     Page<Image> query(Long scope, String aspect, Pageable pageable);
     
     Image select(Long scope, long id);
     Image select(Long scope, UUID uuid);
-	
+    
     void createImages(Resource resource, RelatedImage[] images);
     void updateImages(Resource resource, RelatedImage[] images);
     
@@ -37,13 +37,13 @@ public interface IImageService {
     @AllArgsConstructor
     public static class ImagePageResponse {
 
-    	public long count;
+        public long count;
         public int page;
         public int size;
 
         @XmlElement
         public List<Image> content;
-	}
+    }
     
     @XmlRootElement
     @NoArgsConstructor
@@ -59,11 +59,11 @@ public interface IImageService {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ImageCreate {
-    	
-    	public Callable<File> file;
-    	public long user;
-    	public String original;
-    	public ImageSettings settings;
+        
+        public Callable<File> file;
+        public long user;
+        public String original;
+        public ImageSettings settings;
     }
     
     @XmlRootElement
@@ -71,9 +71,9 @@ public interface IImageService {
     @AllArgsConstructor
     public static class ImageSettings {
         
-    	@XmlElement
-    	public String[] aspects;
-    	
+        @XmlElement
+        public String[] aspects;
+        
         @XmlElement
         public Item[] items;
         

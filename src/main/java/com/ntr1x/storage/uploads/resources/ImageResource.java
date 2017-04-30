@@ -44,7 +44,7 @@ public class ImageResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({ "res:///images:admin" })
+    @RolesAllowed({ "res:///images/:admin" })
     @Transactional
     public ImagePageResponse list(
         @QueryParam("aspect") String aspect,
@@ -127,7 +127,7 @@ public class ImageResource {
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///images/i/{id}:admin" })
+    @RolesAllowed({ "res:///images/i/{id}/:admin" })
     public Image remove(
         @PathParam("id") long id
     ) {

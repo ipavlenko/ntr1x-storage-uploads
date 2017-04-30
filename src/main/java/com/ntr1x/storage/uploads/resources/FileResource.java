@@ -44,7 +44,7 @@ public class FileResource {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({ "res:///uploads:admin" })
+    @RolesAllowed({ "res:///uploads/:admin" })
     @Transactional
     public UploadPageResponse list(
         @QueryParam("aspect") String aspect,
@@ -129,7 +129,7 @@ public class FileResource {
     @Path("/i/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Transactional
-    @RolesAllowed({ "res:///uploads/i/{id}:admin" })
+    @RolesAllowed({ "res:///uploads/i/{id}/:admin" })
     public Upload remove(
         @PathParam("id") long id
     ) {
